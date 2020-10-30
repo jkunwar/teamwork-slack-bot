@@ -16,8 +16,7 @@ jobs:
             sudo apt-get -qq install git-ftp
             echo "Deploying project ..."
             echo $(git status)
-            echo ${FTP_USER}
-            git ftp init --init-if-not-exist --user "${FTP_USER}" --passwd "${FTP_PWD}" ${FTP_LOCATION}
+            git ftp init --init-if-not-exist --user "shiva.aryal@webo.dev" --passwd "0TQ)av9US{VX213df" ftp://webo.dev/public_html/teamwork-slack-integration
  
 workflows:
   version: 2.1

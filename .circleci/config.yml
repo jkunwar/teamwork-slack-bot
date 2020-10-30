@@ -1,8 +1,28 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
+jobs:
+  deploy:
+    docker:
+      - image: circleci/php:latest
+ 
+    working_directory: .
+ 
+    steps:
+      - checkout
+ 
+      - run: 
+          name: Deploy Master Branch
+          command: |
+            sudo apt-get update
+            sudo apt-get -qq install git-ftp
+            echo "Deploying project ..."
+            echo $(git status)
+            git ftp init --init-if-not-exist --user "${FTP_USER}" --passwd "${FTP_PWD}" ${FTP_LOCATION}
+ 
 workflows:
-  node-tests:
+  version: 2.1
+  just-deploy:
     jobs:
-      - node/test
-
+      - deploy:
+          filters:
+            branches:
+              only: master

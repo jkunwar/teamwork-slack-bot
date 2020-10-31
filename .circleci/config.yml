@@ -16,7 +16,7 @@ jobs:
             sudo apt-get -qq install git-ftp
             echo "Deploying project ..."
             echo $(git status)
-            git ftp push --user "${DEV_FTP_USER}" --passwd "${DEV_FTP_PWD}" ${DEV_FTP_LOCATION}
+            git ftp init --user "${DEV_FTP_USER}" --passwd "${DEV_FTP_PWD}" ${DEV_FTP_LOCATION}
 
   deploy_master:
     docker:

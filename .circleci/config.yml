@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  deploy:
+  deploy_dev:
     docker:
       - image: circleci/php:latest
  
@@ -16,13 +16,38 @@ jobs:
             sudo apt-get -qq install git-ftp
             echo "Deploying project ..."
             echo $(git status)
-            git ftp push --user "${FTP_USER}" --passwd "${FTP_PWD}" ${FTP_LOCATION}
+            git ftp push --user "${DEV_FTP_USER}" --passwd "${DEV_FTP_PWD}" ${DEV_FTP_LOCATION}
+
+  deploy_master:
+    docker:
+      - image: circleci/php:latest
+ 
+    working_directory: ~/repo
+ 
+    steps:
+      - checkout
+ 
+      - run: 
+          name: Deploy Master Branch
+          command: |
+            sudo apt-get update
+            sudo apt-get -qq install git-ftp
+            echo "Deploying project ..."
+            echo $(git status)
+            git ftp push --user "${LIVE_FTP_USER}" --passwd "${LIVE_FTP_PWD}" ${LIVE_FTP_LOCATION}
  
 workflows:
   version: 2.1
-  just-deploy:
+  deploy_master:
     jobs:
-      - deploy:
+      - deploy_master:
           filters:
             branches:
               only: master
+  
+  deploy_dev:
+    jobs:
+      - deploy_dev:
+          filters:
+            branches:
+              only: dev

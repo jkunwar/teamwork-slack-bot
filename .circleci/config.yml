@@ -34,7 +34,7 @@ jobs:
             sudo apt-get -qq install git-ftp
             echo "Deploying project ..."
             echo $(git status)
-            git ftp init --user "${LIVE_FTP_USER}" --passwd "${LIVE_FTP_PWD}" ${LIVE_FTP_LOCATION}
+            git ftp push --user "${LIVE_FTP_USER}" --passwd "${LIVE_FTP_PWD}" ${LIVE_FTP_LOCATION}
  
 workflows:
   version: 2.1

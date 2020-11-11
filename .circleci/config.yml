@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
  
-      - run: 
+      - run:
           name: Deploy Master Branch
           command: |
             sudo apt-get update

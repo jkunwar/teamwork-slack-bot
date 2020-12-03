@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  slack: circleci/slack@4.1.3
 jobs:
   deploy_dev:
     docker:
@@ -16,7 +18,7 @@ jobs:
             sudo apt-get -qq install git-ftp
             echo "Deploying project ..."
             echo $(git status)
-            git ftp init --user "${DEV_FTP_USER}" --passwd "${DEV_FTP_PWD}" ${DEV_FTP_LOCATION}
+            git ftp push --user "${DEV_FTP_USER}" --passwd "${DEV_FTP_PWD}" ${DEV_FTP_LOCATION}
 
   deploy_master:
     docker:
@@ -35,9 +37,20 @@ jobs:
             echo "Deploying project ..."
             echo $(git status)
             git ftp push --user "${LIVE_FTP_USER}" --passwd "${LIVE_FTP_PWD}" ${LIVE_FTP_LOCATION}
- 
+  build-test-and-notify:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - slack/notify:
+          color: "#42e2f4"
+          mentions: "jagdish,"
+          message: A custom message to notify the channel about the latest build
+      - slack/status:
+          fail_only: true
+          mentions: "jagdish"
+
 workflows:
-  version: 2.1
   deploy_master:
     jobs:
       - deploy_master:
@@ -51,3 +64,10 @@ workflows:
           filters:
             branches:
               only: dev
+  
+  build-and-notify:
+    jobs:
+      - build-test-and-notify:
+        filters:
+          brances:
+            only: dev
